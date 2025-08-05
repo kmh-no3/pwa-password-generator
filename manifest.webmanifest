@@ -1,0 +1,1 @@
+{"name":"PWA Password Generator","short_name":"Password Gen","start_url":"/pwa-password-generator/","display":"standalone","background_color":"#ffffff","lang":"en","scope":"/pwa-password-generator/","description":"セキュアなパスワード生成アプリ","theme_color":"#667eea","icons":[{"src":"favicon.ico","sizes":"64x64","type":"image/x-icon"}]}
