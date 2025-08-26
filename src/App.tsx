@@ -13,12 +13,14 @@ interface PasswordHistory {
   password: string
   timestamp: number
   strength: number
+  copied?: boolean
 }
 
 function App() {
   const [password, setPassword] = useState<string>('')
   const [copied, setCopied] = useState<boolean>(false)
   const [showHistory, setShowHistory] = useState<boolean>(false)
+  const [showOptions, setShowOptions] = useState<boolean>(false)
   const [passwordHistory, setPasswordHistory] = useState<PasswordHistory[]>([])
   const [options, setOptions] = useState<PasswordOptions>({
     length: 16,
@@ -83,13 +85,30 @@ function App() {
   }
 
   // パスワードをクリップボードにコピー
-  const copyToClipboard = async (text?: string) => {
+  const copyToClipboard = async (text?: string, historyIndex?: number) => {
     const passwordToCopy = text || password
     if (passwordToCopy) {
       try {
         await navigator.clipboard.writeText(passwordToCopy)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
+        
+        if (historyIndex !== undefined) {
+          // 履歴のコピーボタンの場合
+          const newHistory = [...passwordHistory]
+          newHistory[historyIndex].copied = true
+          setPasswordHistory(newHistory)
+          localStorage.setItem('passwordHistory', JSON.stringify(newHistory))
+          
+          setTimeout(() => {
+            const resetHistory = [...passwordHistory]
+            resetHistory[historyIndex].copied = false
+            setPasswordHistory(resetHistory)
+            localStorage.setItem('passwordHistory', JSON.stringify(resetHistory))
+          }, 2000)
+        } else {
+          // メインのコピーボタンの場合
+          setCopied(true)
+          setTimeout(() => setCopied(false), 2000)
+        }
       } catch (err) {
         console.error('クリップボードへのコピーに失敗しました:', err)
       }
@@ -157,59 +176,71 @@ function App() {
         </div>
 
         <div className="options-container">
-          <h3>パスワード設定</h3>
+          <div className="options-header">
+            <h3>⚙️ パスワード設定</h3>
+            <button 
+              onClick={() => setShowOptions(!showOptions)}
+              className="toggle-options-button"
+            >
+              {showOptions ? '▼ 隠す' : '▶ 表示'}
+            </button>
+          </div>
           
-          <div className="option-group">
-            <label className="option-label">
-              <span>パスワードの長さ: {options.length}</span>
-              <input
-                type="range"
-                min="8"
-                max="64"
-                value={options.length}
-                onChange={(e) => setOptions({ ...options, length: parseInt(e.target.value) })}
-                className="length-slider"
-              />
-            </label>
-          </div>
+          {showOptions && (
+            <>
+              <div className="option-group">
+                <label className="option-label">
+                  <span>パスワードの長さ: {options.length}</span>
+                  <input
+                    type="range"
+                    min="8"
+                    max="64"
+                    value={options.length}
+                    onChange={(e) => setOptions({ ...options, length: parseInt(e.target.value) })}
+                    className="length-slider"
+                  />
+                </label>
+              </div>
 
-          <div className="checkbox-group">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={options.includeUppercase}
-                onChange={(e) => setOptions({ ...options, includeUppercase: e.target.checked })}
-              />
-              <span>大文字 (A-Z)</span>
-            </label>
+              <div className="checkbox-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={options.includeUppercase}
+                    onChange={(e) => setOptions({ ...options, includeUppercase: e.target.checked })}
+                  />
+                  <span>大文字 (A-Z)</span>
+                </label>
 
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={options.includeLowercase}
-                onChange={(e) => setOptions({ ...options, includeLowercase: e.target.checked })}
-              />
-              <span>小文字 (a-z)</span>
-            </label>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={options.includeLowercase}
+                    onChange={(e) => setOptions({ ...options, includeLowercase: e.target.checked })}
+                  />
+                  <span>小文字 (a-z)</span>
+                </label>
 
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={options.includeNumbers}
-                onChange={(e) => setOptions({ ...options, includeNumbers: e.target.checked })}
-              />
-              <span>数字 (0-9)</span>
-            </label>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={options.includeNumbers}
+                    onChange={(e) => setOptions({ ...options, includeNumbers: e.target.checked })}
+                  />
+                  <span>数字 (0-9)</span>
+                </label>
 
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={options.includeSymbols}
-                onChange={(e) => setOptions({ ...options, includeSymbols: e.target.checked })}
-              />
-              <span>記号 (!@#$%^&*)</span>
-            </label>
-          </div>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={options.includeSymbols}
+                    onChange={(e) => setOptions({ ...options, includeSymbols: e.target.checked })}
+                  />
+                  <span>記号 (!@#$%^&*)</span>
+                </label>
+              </div>
+            </>
+          )}
         </div>
 
         <button onClick={generatePassword} className="generate-button">
@@ -241,10 +272,10 @@ function App() {
                     </div>
                     <div className="history-actions">
                       <button 
-                        onClick={() => copyToClipboard(item.password)}
-                        className="history-copy-button"
+                        onClick={() => copyToClipboard(item.password, index)}
+                        className={`history-copy-button ${item.copied ? 'copied' : ''}`}
                       >
-                        📋
+                        {item.copied ? '✓' : '📋'}
                       </button>
                       <button 
                         onClick={() => removeFromHistory(index)}
