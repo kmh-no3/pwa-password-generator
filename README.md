@@ -161,4 +161,4 @@ Hosoda Kenji
 
 - **GitHub**: https://github.com/kmh-no3/pwa-password-generator
 - **デモ**: https://kmh-no3.github.io/pwa-password-generator
-- **ポートフォリオ**: https://kenji-hub.vercel.app/works 
+- **ポートフォリオ**: https://kmh-no3.github.io/kenji-hub/works/ 
