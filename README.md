@@ -4,7 +4,7 @@
 
 ## 🌐 ライブデモ
 
-**GitHub Pages**: https://yourusername.github.io/pwa-password-generator
+**GitHub Pages**: https://kmh-no3.github.io/pwa-password-generator
 
 ## 🚀 機能
 
@@ -12,13 +12,19 @@
 - **WebCrypto API**を使用した暗号学的に安全な乱数生成
 - 8-64文字の長さ調整
 - 大文字・小文字・数字・記号の選択可能
-- パスワード強度の5段階評価
+- パスワード強度の5段階評価（弱い〜最強）
 
 ### 📋 パスワード管理
 - ワンクリックでクリップボードにコピー
 - パスワード履歴機能（最新10件）
 - 履歴からの再コピー・削除機能
 - ローカルストレージでの安全な保存
+- 個別のコピーボタン状態管理
+
+### ⚙️ 設定管理
+- パスワード設定の表示/非表示切り替え
+- 履歴の表示/非表示切り替え
+- 直感的なトグルUI
 
 ### 📱 PWA機能
 - オフライン対応
@@ -27,10 +33,12 @@
 - レスポンシブデザイン
 
 ### 🎨 UI/UX
-- モダンで美しいインターフェース
+- 目に優しいグラデーション背景
 - ダークモード対応
 - レスポンシブデザイン
 - アクセシビリティ対応
+- ボタン間隔の最適化
+- モバイルフレンドリーなデザイン
 
 ## 🛠️ 技術スタック
 
@@ -40,6 +48,7 @@
 - **スタイリング**: CSS3 (カスタムスタイル)
 - **暗号化**: WebCrypto API
 - **状態管理**: React Hooks
+- **デプロイ**: GitHub Actions + GitHub Pages
 
 ## 📦 インストール
 
@@ -67,15 +76,18 @@ npm run dev
 
 3. **パスワード生成**
    - 「🔄 新しいパスワードを生成」ボタンをクリック
-   - スライダーで長さを調整
+   - 「⚙️ パスワード設定」で詳細設定を調整
+   - スライダーで長さを調整（8-64文字）
    - チェックボックスで文字種を選択
 
 4. **パスワードコピー**
    - 「📋 コピー」ボタンでクリップボードにコピー
+   - コピー成功時は「✓ コピー済み」と表示
 
 5. **履歴管理**
    - 「📋 パスワード履歴」で過去のパスワードを確認
-   - 個別削除や全履歴クリアが可能
+   - 個別のコピー・削除ボタン
+   - 全履歴クリア機能
 
 ## 🔧 ビルド
 
@@ -97,13 +109,13 @@ npm run preview
 2. **mainブランチにプッシュ**
    ```bash
    git add .
-   git commit -m "Add GitHub Pages deployment"
+   git commit -m "Update deployment"
    git push origin main
    ```
 
 3. **自動デプロイ**
    - GitHub Actionsが自動的にビルドとデプロイを実行
-   - 数分後に `https://yourusername.github.io/pwa-password-generator` でアクセス可能
+   - 数分後に `https://kmh-no3.github.io/pwa-password-generator` でアクセス可能
 
 ### 手動デプロイ
 
@@ -113,16 +125,6 @@ npm install
 
 # デプロイ
 npm run deploy
-```
-
-### 設定のカスタマイズ
-
-`package.json`の`homepage`フィールドを自分のGitHubユーザー名に変更：
-
-```json
-{
-  "homepage": "https://yourusername.github.io/pwa-password-generator"
-}
 ```
 
 ## 📱 PWAとしてインストール
@@ -145,6 +147,7 @@ npm run deploy
 - [ ] パスワードのエクスポート機能
 - [ ] 複数言語対応
 - [ ] テーマカスタマイズ
+- [ ] パスワード生成履歴の統計表示
 
 ## 📄 ライセンス
 
@@ -157,5 +160,5 @@ Hosoda Kenji
 ## 🔗 リンク
 
 - **GitHub**: https://github.com/kmh-no3/pwa-password-generator
-- **デモ**: http://localhost:3001 (開発環境)
+- **デモ**: https://kmh-no3.github.io/pwa-password-generator
 - **ポートフォリオ**: https://kenji-hub.vercel.app/works 
